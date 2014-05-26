@@ -41,6 +41,6 @@ pe/lib/t_topfivecards.c
 pe/lib/t_toptwobits.c
 )
 add_library( pokereval ${POKEREVALSOURCES})
-add_executable( seven_card_hands seven_card_hands.c )
-target_link_libraries ( seven_card_hands pokereval )
+add_executable( peteomaha peteomaha.c )
+target_link_libraries ( peteomaha pokereval )
 

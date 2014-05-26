@@ -3,3 +3,4 @@
 build
 *.lo
 subm/
+nbproject
