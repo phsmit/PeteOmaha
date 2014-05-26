@@ -12,10 +12,7 @@
 /*
  * 
  */
-int main(int argc, char** argv) {
-//    puts("check 0");
-//    fflush(stdout);
-            
+int main(int argc, char** argv) {          
     size_t nbytes = 100;
     char *line;
     
