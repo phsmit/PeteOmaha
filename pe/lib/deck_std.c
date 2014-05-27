@@ -25,8 +25,10 @@
 
 
 
-char StdDeck_rankChars[] = "23456789TJQKA";
-char StdDeck_suitChars[] = "hdcs";
+char StdDeck_rankChars[] = {'2','3', '4', '5', '6', '7','8','9', 'T', 'J', 'Q', 'K', 'A'};
+//"23456789TJQKA";
+char StdDeck_suitChars[] = {'h', 'd', 'c', 's'};
+//"hdcs";
 
 int tototo[8];
 
