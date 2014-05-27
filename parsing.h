@@ -61,11 +61,12 @@ StdDeck_CardMask read_cards(char* s) {
        cardm = StdDeck_MASK(cardi);
        StdDeck_CardMask_OR(handm, handm, cardm);
     }
-    fprintf(stderr, "%d cards read\n", StdDeck_numCards(handm));
+//    fprintf(stderr, "%d cards read\n", StdDeck_numCards(handm));
     return handm;
 }
 
 void new_round(po_match *match, int round) {
+    fprintf(stderr,"Round %d\n", round);
     match->round = round;
     match->stage = PREFLOP;
     
