@@ -14,6 +14,9 @@
  * 
  */
 
+#define CHECKFOLD -1
+#define UNKNOWN -2
+
 void make_probabilistic_descision(po_match * match, po_settings * settings, po_res_counts * counts) {
     long sum = counts->wins + counts->losses + counts->draws;
     double w = (double) counts->wins / (double) sum;
@@ -46,6 +49,56 @@ void make_probabilistic_descision(po_match * match, po_settings * settings, po_r
         } else {
             printf("raise %d\n",raise);
         }
+    }
+    
+}
+
+void make_probabilistic_descision2(po_match * match, po_settings * settings, po_res_counts * counts) {
+    long sum = counts->wins + counts->losses + counts->draws;
+    double w = (double) counts->wins / (double) sum;
+    double l = (double) counts->losses / (double) sum;
+    double d = (double) counts->draws / (double) sum;
+    
+    int decision = UNKNOWN;
+    
+    switch (match->stage) {
+        case FLOP:
+            if (w + d < 0.7) {
+                decision = CHECKFOLD;
+            }
+            break;
+        case RIVER:
+        case TURN:
+            if (w + d < 0.55) {
+                decision = CHECKFOLD;
+            }
+            break;
+    }
+    
+    // If decision is still UNKNOWN, we have good chances.
+    
+    if (w + d > 0.85) decision = match->big_blind;
+    if (w + d > 0.97) decision = match->max_win_pot + match->amount_to_call;
+    if (decision == UNKNOWN) decision = 0;
+    
+    switch (decision) {
+        case CHECKFOLD:
+            if (match->amount_to_call == 0) {
+                puts("check 0");
+            } else {
+                puts("fold 0");
+            }
+            break;
+        case 0:
+            if (match->amount_to_call == 0) {
+                puts("check 0");
+            } else {
+                puts("call 0");
+            }
+            break;
+        default:
+            printf("raise %d\n",decision);
+            break;
     }
     
 }
@@ -90,7 +143,7 @@ int main(int argc, char** argv) {
                             (double) counts.losses / (double)sum * 100.0
                             );
                         
-                    make_probabilistic_descision(&match, &settings, & counts);
+                    make_probabilistic_descision2(&match, &settings, & counts);
 //                    // We first implement the rules from http://cowboyprogramming.com/2007/01/04/programming-poker-ai/
 //                    double hand_strength = ((double) counts.wins + (double) counts.draws / 2) / (double) sum;
 //                    int call = match.amount_to_call;

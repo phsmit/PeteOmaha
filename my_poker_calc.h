@@ -72,7 +72,7 @@ void get_win_chance(StdDeck_CardMask hole, StdDeck_CardMask board, po_res_counts
 //                get_win(hole, gen_cards, board, counts);
 //            }
             
-            DECK_MONTECARLO_N_CARDS_D(StdDeck, gen_cards, used_cards, 4, 1000, {
+            DECK_MONTECARLO_N_CARDS_D(StdDeck, gen_cards, used_cards, 4, 500, {
                 get_win(hole, gen_cards, board, counts);
             }
             
