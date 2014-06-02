@@ -16,5 +16,7 @@ pe/lib/rules_std.c
 )
 add_library( pokereval ${POKEREVALSOURCES})
 add_executable( peteomaha peteomaha.c )
+add_executable( pregen pregen/pregen.c )
+target_link_libraries ( pregen pokereval )
 target_link_libraries ( peteomaha pokereval )
 
