@@ -17,6 +17,12 @@ pe/lib/rules_std.c
 add_library( pokereval ${POKEREVALSOURCES})
 add_executable( peteomaha peteomaha.c )
 add_executable( pregen pregen/pregen.c )
+add_executable( test_starting_hands pregen/test_starting_hands.c )
+add_executable( print_unique_hands pregen/print_unique_hands.c )
+add_executable( classify_hands pregen/classify_hands.c )
+
 target_link_libraries ( pregen pokereval )
 target_link_libraries ( peteomaha pokereval )
-
+target_link_libraries ( test_starting_hands pokereval)
+target_link_libraries ( print_unique_hands pokereval)
+target_link_libraries ( classify_hands pokereval)
