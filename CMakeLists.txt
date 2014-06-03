@@ -7,17 +7,21 @@ include_directories("include")
 include_directories("vendor/poker-eval/include")
 #include_directories(${POKEREVAL_INCLUDEDIRS})
 
-add_executable( peteomaha programs/peteomaha.c )
-add_executable( pregen programs/pregen.c )
-add_executable( test_starting_hands programs/test_starting_hands.c )
-add_executable( print_unique_hands programs/print_unique_hands.c )
-add_executable( classify_hands programs/classify_hands.c )
+set(PO_FILES
+lib/t_probtables.c
+)
 
-target_link_libraries ( pregen pokereval )
-target_link_libraries ( peteomaha pokereval )
-target_link_libraries ( test_starting_hands pokereval)
-target_link_libraries ( print_unique_hands pokereval)
-target_link_libraries ( classify_hands pokereval)
+set(PO_CMDS
+build_probs_file
+hole_probs 
+peteomaha 
+pregen 
+test_search
+test_starting_hands
+unique_holes
+)
 
-add_executable( test_search programs/test_search.c )
-target_link_libraries (test_search pokereval)
+foreach(PO_CMD ${PO_CMDS})
+    add_executable ( ${PO_CMD} programs/${PO_CMD}.c ${PO_FILES})
+    target_link_libraries ( ${PO_CMD} pokereval )
+endforeach(PO_CMD)
