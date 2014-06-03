@@ -1,29 +1,23 @@
 cmake_minimum_required(VERSION 2.8)
 PROJECT(PeteOmaha)
 
-include_directories("include")
-include_directories("pe/include")
+add_subdirectory( vendor )
 
-set(POKEREVALSOURCES 
-pe/lib/deck.c
-pe/lib/deck_std.c
-pe/lib/t_cardmasks.c
-pe/lib/t_topfivecards.c
-pe/lib/t_straight.c
-pe/lib/t_nbits.c
-pe/lib/t_topcard.c
-pe/lib/t_botfivecards.c
-pe/lib/rules_std.c
-)
-add_library( pokereval ${POKEREVALSOURCES})
+include_directories("include")
+include_directories("vendor/poker-eval/include")
+#include_directories(${POKEREVAL_INCLUDEDIRS})
+
 add_executable( peteomaha programs/peteomaha.c )
-add_executable( pregen pregen/pregen.c )
-add_executable( test_starting_hands pregen/test_starting_hands.c )
-add_executable( print_unique_hands pregen/print_unique_hands.c )
-add_executable( classify_hands pregen/classify_hands.c )
+add_executable( pregen programs/pregen.c )
+add_executable( test_starting_hands programs/test_starting_hands.c )
+add_executable( print_unique_hands programs/print_unique_hands.c )
+add_executable( classify_hands programs/classify_hands.c )
 
 target_link_libraries ( pregen pokereval )
 target_link_libraries ( peteomaha pokereval )
 target_link_libraries ( test_starting_hands pokereval)
 target_link_libraries ( print_unique_hands pokereval)
 target_link_libraries ( classify_hands pokereval)
+
+add_executable( test_search programs/test_search.c )
+target_link_libraries (test_search pokereval)

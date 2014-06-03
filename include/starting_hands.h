@@ -24,9 +24,9 @@ int compare_masks(const void *a, const void *b ) {
     const StdDeck_CardMask *arg1 = a;
     const StdDeck_CardMask *arg2 = b;
     
-    if (*arg1->cards_n > *arg2->cards_n ) {
+    if (arg1->cards_n > arg2->cards_n ) {
         return 1;
-    } else if (*arg1->cards_n < *arg2->cards_n) {
+    } else if (arg1->cards_n < arg2->cards_n) {
         return -1;
     } else {
         return 0;
@@ -50,31 +50,41 @@ void fill_uniques() {
     qsort(uniques, i, sizeof(StdDeck_CardMask), compare_masks);
 }
 
-StdDeck_CardMask* find_unique(StdDeck_CardMask unique) {
+int find_unique_index(StdDeck_CardMask unique) {
     
     StdDeck_CardMask const * card = bsearch(&unique, uniques, NUM_UNIQUES, sizeof(StdDeck_CardMask), compare_masks );
-    return card;
+    return card - uniques;
 }
 
 static inline void get_unique(StdDeck_CardMask * hand) {
     if (hand->cards.spades < hand->cards.clubs) {
-        swap(&hand->cards.spades, &hand->cards.clubs);
+        hand->cards.spades ^= hand->cards.clubs;
+        hand->cards.clubs ^= hand->cards.spades;
+        hand->cards.spades ^= hand->cards.clubs;
     }
     
     if (hand->cards.diamonds < hand->cards.hearts) {
-        swap(&hand->cards.diamonds, &hand->cards.hearts);
+        hand->cards.diamonds ^= hand->cards.hearts;
+        hand->cards.hearts ^= hand->cards.diamonds;
+        hand->cards.diamonds ^= hand->cards.hearts;
     }
     
     if (hand->cards.spades < hand->cards.diamonds) {
-        swap(&hand->cards.spades, &hand->cards.diamonds);
+        hand->cards.spades ^= hand->cards.diamonds;
+        hand->cards.diamonds ^= hand->cards.spades;
+        hand->cards.spades ^= hand->cards.diamonds;
     }
     
     if (hand->cards.clubs < hand->cards.hearts) {
-        swap(&hand->cards.clubs, &hand->cards.hearts);
+        hand->cards.clubs ^= hand->cards.hearts;
+        hand->cards.hearts ^= hand->cards.clubs;
+        hand->cards.clubs ^= hand->cards.hearts;
     }
     
     if (hand->cards.clubs < hand->cards.diamonds) {
-        swap(&hand->cards.clubs, &hand->cards.diamonds);
+        hand->cards.clubs ^= hand->cards.diamonds;
+        hand->cards.diamonds ^= hand->cards.clubs;
+        hand->cards.clubs ^= hand->cards.diamonds;
     }
 }
 

@@ -26,8 +26,9 @@ int main(int argc, char** argv) {
         if(hole.cards.spades >= hole.cards.clubs &&
                 hole.cards.clubs >= hole.cards.diamonds &&
                 hole.cards.diamonds >= hole.cards.hearts) {
-            puts(StdDeck_maskString(hole));
-            //print hand
+            
+//            puts(StdDeck_maskString(hole));
+            printf("%s: %d\n", StdDeck_maskString(hole), find_unique_index(hole));
         }
 //        
     });
