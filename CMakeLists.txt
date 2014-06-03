@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 PROJECT(PeteOmaha)
 
+include_directories("include")
 include_directories("pe/include")
 
 set(POKEREVALSOURCES 
@@ -15,7 +16,7 @@ pe/lib/t_botfivecards.c
 pe/lib/rules_std.c
 )
 add_library( pokereval ${POKEREVALSOURCES})
-add_executable( peteomaha peteomaha.c )
+add_executable( peteomaha programs/peteomaha.c )
 add_executable( pregen pregen/pregen.c )
 add_executable( test_starting_hands pregen/test_starting_hands.c )
 add_executable( print_unique_hands pregen/print_unique_hands.c )
