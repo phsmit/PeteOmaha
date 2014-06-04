@@ -16,17 +16,9 @@ static inline StdDeck_CardMask read_cards(char* s) {
 }
 
 static inline void new_round(po_match *match, int round) {
-    fprintf(stderr,"Round %d\n", round);
-    match->round = round;
-    match->stage = PREFLOP;
-    
-    StdDeck_CardMask_RESET(match->table);
-    StdDeck_CardMask_RESET(match->hand[ME]);
-    StdDeck_CardMask_RESET(match->hand[OTHER]);
-    
-    memset(match->bets, 0, sizeof(match->bets[0][0]) * 2 * 4);
-    
+    fprintf(stderr,"Round %d\n", round);   
 }
+
 int po_parse_next_line(char* line, po_match * match, po_settings * settings) {
     line[strlen(line) - 1] = '\0';
     char* keyword_one = strtok(line, " ");
@@ -36,17 +28,17 @@ int po_parse_next_line(char* line, po_match * match, po_settings * settings) {
     
     if (strcmp(keyword_one, "Match") == 0) {
         if (strcmp(keyword_two, "round") == 0) {
-            // TODO save previous round
             new_round(match, atoi(value));            
+            return NEW_ROUND;
         } else if (strcmp(keyword_two, "smallBlind") == 0) {
             match->small_blind = atoi(value);
         } else if (strcmp(keyword_two, "bigBlind") == 0) {
             match->big_blind = atoi(value);
         } else if (strcmp(keyword_two, "onButton") == 0) {
-            match->me_on_button = strcmp(value, settings->my_player) == 0;
+            match->on_button = strcmp(value, settings->my_player) == 0 ? ME : OTHER;
         } else if (strcmp(keyword_two, "table") == 0) {
-            match->table = read_cards(value);
-            switch (StdDeck_numCards(match->table)) {
+            StdDeck_CardMask board = read_cards(value);
+            switch (StdDeck_numCards(board)) {
                 case 3:
                     match->stage = FLOP;
                     break;
@@ -57,6 +49,8 @@ int po_parse_next_line(char* line, po_match * match, po_settings * settings) {
                     match->stage = RIVER;
                     break;
             }
+            match->board[match->stage] = board;
+            return NEW_STAGE;
         } else if (strcmp(keyword_two, "maxWinPot") == 0) {
             match->max_win_pot = atoi(value);
         } else if (strcmp(keyword_two, "amountToCall") == 0) {
@@ -71,16 +65,19 @@ int po_parse_next_line(char* line, po_match * match, po_settings * settings) {
         } else if (strcmp(keyword_two, "post") == 0) {
             match->bets[player][match->stage] += atoi(value);
         } else if (strcmp(keyword_two, "hand") == 0) {
-            match->hand[player] = read_cards(value);
+            match->hole[player] = read_cards(value);
+            switch(player) {
+                case ME:
+                    return MY_HOLE;
+                case OTHER:
+                    return OPPONENT_HOLE;
+            }
         } else if (strcmp(keyword_two, "fold") == 0) {
-            // TODO Register fold?
-        } else if (strcmp(keyword_two, "check") == 0 ||
-                   strcmp(keyword_two, "call") == 0 ||
-                   strcmp(keyword_two, "raise")) {
+            match->fold_stage[player] = match->stage;
+        } else if (strcmp(keyword_two, "raise") == 0) {
             match->bets[player][match->stage] += atoi(value);           
         } else if (strcmp(keyword_two, "wins") == 0) {
-            // TODO am I interested in this?
-            // End of round, but two people can win
+            match->win[player] = atoi(value);
         }
     }
     else if (strcmp(keyword_one, "Action") == 0) {

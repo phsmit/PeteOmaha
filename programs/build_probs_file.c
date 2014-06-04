@@ -1,12 +1,5 @@
-/* 
- * File:   build_probs_file.c
- * Author: peter
- *
- * Created on June 3, 2014, 1:59 PM
- */
-
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
 #include "preflop_holes.h"
 

@@ -2,101 +2,70 @@
 #include <stdlib.h>
 
 #include "datatypes.h"
-#include "parsing.h"
 #include "omaha_calc.h"
+#include "parsing.h"
+#include "decision_engine.h"
 
 
-#define CHECKFOLD -1
-#define UNKNOWN -2
 
-void make_probabilistic_descision2(po_match * match, po_settings * settings, po_probs * probs) {
-    int decision = UNKNOWN;
-    
-    switch (match->stage) {
-        case FLOP:
-            if (probs->win + probs->draw < 0.7) {
-                decision = CHECKFOLD;
-            }
-            break;
-        case RIVER:
-        case TURN:
-            if (probs->win + probs->draw < 0.55) {
-                decision = CHECKFOLD;
-            }
-            break;
+
+#define MAX_MATCHES 256
+
+void calculate_my_probs(po_match * match) {
+    match->probs[ME][match->stage] = get_probs(match->hole[ME], match->board[match->stage]);
+}
+
+void calculate_opponent_probs(po_match * match) {
+    int stage;
+    for (stage = 1; stage <= match->stage; ++stage) {
+        match->probs[ME][stage] = get_probs(match->hole[OTHER], match->board[stage]);
     }
-    
-    // If decision is still UNKNOWN, we have good chances.
-    
-    if (probs->win + probs->draw > 0.85) decision = match->big_blind;
-    if (probs->win + probs->draw > 0.97) decision = match->max_win_pot + match->amount_to_call;
-    if (decision == UNKNOWN) decision = 0;
-    
-    switch (decision) {
-        case CHECKFOLD:
-            if (match->amount_to_call == 0) {
-                puts("check 0");
-            } else {
-                puts("fold 0");
-            }
-            break;
-        case 0:
-            if (match->amount_to_call == 0) {
-                puts("check 0");
-            } else {
-                puts("call 0");
-            }
-            break;
-        default:
-            printf("raise %d\n",decision);
-            break;
+}
+
+void init_matches(po_match * matches) {
+    int id;
+    for (id = 0; id < MAX_MATCHES; ++id) {
+        matches[id].round = id + 1;
+        matches[id].fold_stage[ME] = -1;
+        matches[id].fold_stage[OTHER] = -1;
     }
-    
 }
 
 int main(int argc, char** argv) {          
     size_t nbytes = 100;
     char *line;
+    line = (char *) malloc(nbytes + 1);
     
     po_settings settings;
-    po_match match;
+    
+    po_match match_history[MAX_MATCHES];
+    memset(match_history, 0, sizeof(*match_history) * MAX_MATCHES);
+    
+    po_match * current_match = match_history;
 
     po_probs probs;
     
-    line = (char *) malloc(nbytes + 1);
-    
-    int action_time = 0;
+    int action;
     while(getline(&line, &nbytes, stdin))
     {
-        action_time = po_parse_next_line(line, &match, &settings);
-        if (action_time) {
-            switch (match.stage) {
-                case PREFLOP:
-                    if (match.amount_to_call == 0) {
-                        puts("check 0");
-                        break;
-                    }
-                    if(match.bets[ME][PREFLOP] + match.amount_to_call <= match.big_blind) {
-                        printf("call %i\n", match.amount_to_call);
-                    } else {
-                        puts("fold 0");
-                    }
-                    break;
-                default:
-                    probs = get_probs(match.hand[ME], match.table);
-                    fprintf(stderr, "----------------\n");
-                    fprintf(stderr, "my hole: %s\n", StdDeck_maskString(match.hand[ME]));
-                    fprintf(stderr, "board  : %s\n", StdDeck_maskString(match.table));
-                    
-                    fprintf(stderr, "win %.2f%%, draw %.2f%%, loss %.2f%%\n", 
-                            probs.win, probs.draw, probs.loss
-                            );
-                        
-                    make_probabilistic_descision2(&match, &settings, & probs);
-
-                    break;
-            }            
-            fflush(stdout);
+        action = po_parse_next_line(line, current_match, &settings);
+        switch (action) {
+            case NEW_STAGE:
+            case MY_HOLE:
+                calculate_my_probs(current_match);
+                break;
+            case OPPONENT_HOLE:
+                calculate_opponent_probs(current_match);
+                break;
+            case NEW_ROUND:
+                current_match++;
+                break;
+            case NO_ACTION:
+                break;        
+            default:
+                play_poker(current_match, match_history);
+                fflush(stdout);
+                break; 
         }
     }
 
