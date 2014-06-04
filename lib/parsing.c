@@ -20,6 +20,7 @@ static inline void new_round(po_match *match, int round) {
 }
 
 int po_parse_next_line(char* line, po_match * match, po_settings * settings) {
+    if(strlen(line) < 5) return NO_ACTION;
     line[strlen(line) - 1] = '\0';
     char* keyword_one = strtok(line, " ");
     char* keyword_two = strtok(NULL, " ");
@@ -63,7 +64,7 @@ int po_parse_next_line(char* line, po_match * match, po_settings * settings) {
         if (strcmp(keyword_two, "stack") == 0) {
             match->stack[player] = atoi(value);
         } else if (strcmp(keyword_two, "post") == 0) {
-            match->bets[player][match->stage] += atoi(value);
+//            match->bets[player][match->stage] += atoi(value);
         } else if (strcmp(keyword_two, "hand") == 0) {
             match->hole[player] = read_cards(value);
             switch(player) {

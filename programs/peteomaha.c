@@ -27,15 +27,16 @@ void init_matches(po_match * matches) {
     }
 }
 
-int main(int argc, char** argv) {          
-    size_t nbytes = 100;
-    char *line;
-    line = (char *) malloc(nbytes + 1);
+int main(int argc, char** argv) {    
+    init_preflop_holes();
+    size_t nbytes = 0;
+    char *line = NULL;
     
     po_settings settings;
     
     po_match match_history[MAX_MATCHES];
     memset(match_history, 0, sizeof(*match_history) * MAX_MATCHES);
+    init_matches(match_history);
     
     po_match * current_match = match_history;
     
@@ -62,6 +63,8 @@ int main(int argc, char** argv) {
                 break; 
         }
     }
+    
+    free(line);
 
     return (EXIT_SUCCESS);
 }
