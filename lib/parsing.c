@@ -12,7 +12,6 @@ static inline StdDeck_CardMask read_cards(char* s) {
        cardm = StdDeck_MASK(cardi);
        StdDeck_CardMask_OR(handm, handm, cardm);
     }
-//    fprintf(stderr, "%d cards read\n", StdDeck_numCards(handm));
     return handm;
 }
 

@@ -8,7 +8,6 @@ static inline void swap(StdDeck_CardMask * a, StdDeck_CardMask * b) {
     *b = t;
 }
 
-
 int compare_masks(const void *a, const void *b ) {
     const StdDeck_CardMask *arg1 = a;
     const StdDeck_CardMask *arg2 = b;
@@ -74,11 +73,11 @@ int get_preflop_index(StdDeck_CardMask hole) {
     return card - uniques;
 }
 
-void preflop_probs(StdDeck_CardMask hole, double * win, double * loss, double *draw) {
+po_probs preflop_probs(StdDeck_CardMask hole) {
     int index = get_preflop_index(hole);
-    *win = win_table[index];
-    *draw = draw_table[index];
-    *loss = loss_table[index];
+    
+    po_probs prob = {win_table[index], draw_table[index], loss_table[index]};
+    return prob;
 };
 
 

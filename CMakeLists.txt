@@ -8,6 +8,7 @@ include_directories("vendor/poker-eval/include")
 #include_directories(${POKEREVAL_INCLUDEDIRS})
 
 set(PO_FILES
+lib/omaha_calc.c
 lib/parsing.c
 lib/preflop_holes.c
 lib/t_probtables.c
