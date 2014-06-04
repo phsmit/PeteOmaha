@@ -1,13 +1,9 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "datatypes.h"
 #include "omaha_calc.h"
 #include "parsing.h"
 #include "decision_engine.h"
-
-
-
 
 #define MAX_MATCHES 256
 
@@ -42,8 +38,6 @@ int main(int argc, char** argv) {
     memset(match_history, 0, sizeof(*match_history) * MAX_MATCHES);
     
     po_match * current_match = match_history;
-
-    po_probs probs;
     
     int action;
     while(getline(&line, &nbytes, stdin))

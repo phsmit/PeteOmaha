@@ -3,9 +3,6 @@
 
 #include "preflop_holes.h"
 
-/*
- * 
- */
 int main(int argc, char** argv) {
     init_preflop_holes();
     double wins[NUM_UNIQUES];
