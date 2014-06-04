@@ -2,6 +2,8 @@
 
 #include "probtables.h"
 
+StdDeck_CardMask uniques[NUM_UNIQUES] = {};
+
 static inline void swap(StdDeck_CardMask * a, StdDeck_CardMask * b) {
     StdDeck_CardMask t = *a;
     *a = *b;
@@ -9,9 +11,18 @@ static inline void swap(StdDeck_CardMask * a, StdDeck_CardMask * b) {
 }
 
 int compare_masks(const void *a, const void *b ) {
-    const StdDeck_CardMask *arg1 = a;
-    const StdDeck_CardMask *arg2 = b;
     
+#ifdef	__cplusplus
+    const StdDeck_CardMask * arg1 = reinterpret_cast<const StdDeck_CardMask*>(a);
+    const StdDeck_CardMask * arg2 = reinterpret_cast<const StdDeck_CardMask*>(b); 
+#else
+       const StdDeck_CardMask *arg1 = a;
+    const StdDeck_CardMask *arg2 = b;
+     
+#endif
+
+
+
     if (arg1->cards_n > arg2->cards_n ) {
         return 1;
     } else if (arg1->cards_n < arg2->cards_n) {
@@ -69,7 +80,12 @@ int get_preflop_index(StdDeck_CardMask hole) {
         hole.cards.clubs ^= hole.cards.diamonds;
     }
     
+    #ifdef	__cplusplus
+
+    StdDeck_CardMask const * card = (StdDeck_CardMask* ) bsearch(&hole, uniques, NUM_UNIQUES, sizeof(StdDeck_CardMask), compare_masks );
+#else
     StdDeck_CardMask const * card = bsearch(&hole, uniques, NUM_UNIQUES, sizeof(StdDeck_CardMask), compare_masks );
+#endif
     return card - uniques;
 }
 

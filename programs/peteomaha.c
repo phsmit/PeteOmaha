@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "datatypes.h"
+#include "preflop_holes.h"
 #include "omaha_calc.h"
 #include "parsing.h"
 #include "decision_engine.h"

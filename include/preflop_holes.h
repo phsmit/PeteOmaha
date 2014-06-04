@@ -5,8 +5,11 @@
 
 #define NUM_UNIQUES 16432
 
+#ifdef	__cplusplus
+extern StdDeck_CardMask uniques[NUM_UNIQUES];
+#else
 StdDeck_CardMask uniques[NUM_UNIQUES];
-
+#endif
 void init_preflop_holes();
 
 po_probs preflop_probs(StdDeck_CardMask hole);
