@@ -8,13 +8,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "starting_hands.h"
+#include "preflop_holes.h"
 
 /*
  * 
  */
 int main(int argc, char** argv) {
-    fill_uniques();
+    init_preflop_holes();
     double wins[NUM_UNIQUES];
     double draws[NUM_UNIQUES];
     double losses[NUM_UNIQUES];
@@ -23,17 +23,17 @@ int main(int argc, char** argv) {
     char *line;
     line = (char *) malloc(nbytes + 1);
     
-    StdDeck_CardMask hand, card;
+    StdDeck_CardMask hole, card;
     
     int i, card_i, index;
     
     while(getline(&line, &nbytes, stdin)  > 0)
     {
-        StdDeck_CardMask_RESET(hand);
+        StdDeck_CardMask_RESET(hole);
         for (i = 0; i < 4; ++i) {
             StdDeck_stringToCard(line+i*3, &card_i); 
             card = StdDeck_MASK(card_i);
-            StdDeck_CardMask_OR(hand, hand, card);
+            StdDeck_CardMask_OR(hole, hole, card);
         }
         
         line[strlen(line) - 1] = '\0';
@@ -41,9 +41,8 @@ int main(int argc, char** argv) {
         double draw = atof(strtok(NULL, " "));
         double loss = atof(strtok(NULL, " "));
         
-        get_unique(&hand);
+        index = get_preflop_index(hole);
         
-        index = find_unique_index(hand);
         wins[index] = win;
         draws[index] = draw;
         losses[index] = loss;

@@ -9,15 +9,13 @@ include_directories("vendor/poker-eval/include")
 
 set(PO_FILES
 lib/t_probtables.c
+lib/preflop_holes.c
 )
 
 set(PO_CMDS
 build_probs_file
 hole_probs 
 peteomaha 
-pregen 
-test_search
-test_starting_hands
 unique_holes
 )
 

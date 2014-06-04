@@ -9,7 +9,7 @@
 #include <stdlib.h>
 
 #include "poker_defs.h"
-#include "starting_hands.h"
+#include "preflop_holes.h"
 /*
  * 
  */
