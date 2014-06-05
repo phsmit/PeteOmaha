@@ -14,7 +14,7 @@ static inline HandVal calc_handval(StdDeck_CardMask hole, StdDeck_CardMask board
     return val;
 } 
 
-static inline void calc_counts(StdDeck_CardMask my_hole, StdDeck_CardMask board, counts_t * counts) {
+static inline void calc_counts(StdDeck_CardMask my_hole, StdDeck_CardMask board, counts_t * counts, int num_trials) {
     HandVal my_value = calc_handval(my_hole, board);
     HandVal other_value;
     
@@ -23,7 +23,7 @@ static inline void calc_counts(StdDeck_CardMask my_hole, StdDeck_CardMask board,
     StdDeck_CardMask_OR(used_cards, my_hole, board);
     
     
-    DECK_MONTECARLO_N_CARDS_D(StdDeck, other_hole, used_cards, 4, 500, {
+    DECK_MONTECARLO_N_CARDS_D(StdDeck, other_hole, used_cards, 4, num_trials, {
         other_value = calc_handval(other_hole, board);
         if (my_value > other_value) counts->win += 1;
         else if (my_value == other_value) counts->draw += 1;
@@ -47,17 +47,17 @@ po_probs get_probs(StdDeck_CardMask hole, StdDeck_CardMask board) {
         case 3:
             DECK_ENUMERATE_2_CARDS_D(StdDeck, new_cards, used_cards, {
                 StdDeck_CardMask_OR(complete_board, board, new_cards);
-                calc_counts(hole, complete_board, &counts);
+                calc_counts(hole, complete_board, &counts, 200);
             });
             break;
         case 4:
             DECK_ENUMERATE_1_CARDS_D(StdDeck, new_cards, used_cards, {
                 StdDeck_CardMask_OR(complete_board, board, new_cards);
-                calc_counts(hole, complete_board, &counts);
+                calc_counts(hole, complete_board, &counts, 500);
             });
             break;
         case 5:
-            calc_counts(hole, board, &counts);
+            calc_counts(hole, board, &counts, 1000);
             break;
     }
     
