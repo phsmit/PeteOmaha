@@ -11,14 +11,16 @@ void play_poker(po_match * match, po_match * match_history) {
     fprintf(stderr, "my hole: %s\n", StdDeck_maskString(match->hole[ME]));
     fprintf(stderr, "board  : %s\n", StdDeck_maskString(match->board[match->stage]));
 
-    fprintf(stderr, "win %.2f%, draw %.2f%, loss %.2f%\n", 
+    fprintf(stderr, "win %.2f, draw %.2f, loss %.2f\n", 
             match->probs[ME][match->stage].win, 
             match->probs[ME][match->stage].draw, 
-            match->probs[ME][match->stage].loss
-            );
+            match->probs[ME][match->stage].loss);
             
     po_probs * probs = &match->probs[ME][match->stage];
     int decision = UNKNOWN;
+    
+    // TODO do not reraise on preflop and flop
+    
     
     switch (match->stage) {
         
@@ -40,8 +42,8 @@ void play_poker(po_match * match, po_match * match_history) {
             }
             break;
         case FLOP:
-        case RIVER:
         case TURN:
+        case RIVER:
             if (probs->win + probs->draw < 0.55) {
                 decision = CHECKFOLD;
             }
@@ -53,6 +55,27 @@ void play_poker(po_match * match, po_match * match_history) {
     if (probs->win + probs->draw > 0.85) decision = match->big_blind;
     if (probs->win + probs->draw > 0.97) decision = match->max_win_pot + match->amount_to_call;
     if (decision == UNKNOWN) decision = 0;
+    
+    if (decision > 0 && probs->win + probs->draw < 0.98) {
+        switch(match->stage) {
+            case PREFLOP:
+            case FLOP:
+                if (match->bets[ME][match->stage] > 0) {
+                    decision = 0;
+                }
+                break;
+            case TURN:
+                if(match->max_win_pot > 10 * match->big_blind) {
+                    decision = 0;
+                }
+                break;
+            case RIVER:
+                if(match->max_win_pot > 15 * match->big_blind) {
+                    decision = 0;
+                }
+                break;
+        }
+    }
     
     switch (decision) {
         case CHECKFOLD:
