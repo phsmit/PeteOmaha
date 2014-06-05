@@ -40,10 +40,6 @@ void play_poker(po_match * match, po_match * match_history) {
             }
             break;
         case FLOP:
-            if (probs->win + probs->draw < 0.7) {
-                decision = CHECKFOLD;
-            }
-            break;
         case RIVER:
         case TURN:
             if (probs->win + probs->draw < 0.55) {
