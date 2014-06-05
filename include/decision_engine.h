@@ -30,13 +30,15 @@ void play_poker(po_match * match, po_match * match_history) {
                     decision = match->big_blind;
                 } else {
                     decision = 0;
-                }
-            }
-            else if (probs->win + probs->draw < 0.35) {
-                decision = CHECKFOLD;
-            }
-            else if(match->bets[ME][PREFLOP] + match->amount_to_call <= match->big_blind) {
+                } 
+            } else if (probs->win + probs->draw > 0.5) {
                 decision = 0;
+            } else if (probs->win + probs->draw > 0.35) {
+                if(match->bets[ME][PREFLOP] + match->amount_to_call <= match->big_blind) {
+                decision = 0;
+                } else {
+                    decision = CHECKFOLD;
+                }
             } else {
                 decision = CHECKFOLD;
             }
