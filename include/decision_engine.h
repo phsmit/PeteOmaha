@@ -11,7 +11,7 @@ void play_poker(po_match * match, po_match * match_history) {
     fprintf(stderr, "my hole: %s\n", StdDeck_maskString(match->hole[ME]));
     fprintf(stderr, "board  : %s\n", StdDeck_maskString(match->board[match->stage]));
 
-    fprintf(stderr, "win %.2f%%, draw %.2f%%, loss %.2f%%\n", 
+    fprintf(stderr, "win %.2f%, draw %.2f%, loss %.2f%\n", 
             match->probs[ME][match->stage].win, 
             match->probs[ME][match->stage].draw, 
             match->probs[ME][match->stage].loss

@@ -92,7 +92,7 @@ int get_preflop_index(StdDeck_CardMask hole) {
 po_probs preflop_probs(StdDeck_CardMask hole) {
     int index = get_preflop_index(hole);
     
-    po_probs prob = {win_table[index], draw_table[index], loss_table[index]};
+    po_probs prob = {win_table[index]/100, draw_table[index]/100, loss_table[index]/100};
     return prob;
 };
 
