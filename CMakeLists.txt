@@ -16,6 +16,7 @@ lib/t_probtables.c
 
 set(PO_CMDS
 build_probs_file
+calc
 hole_probs 
 peteomaha 
 unique_holes
