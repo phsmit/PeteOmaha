@@ -11,18 +11,12 @@
 #include "omaha_calc.h"
 
 
-/*
- * 
- */
-int main(int argc, char** argv) {
-    init_preflop_holes();
-    
+static inline void calc(int argc, char** argv) {   
     StdDeck_CardMask hole, board;
     StdDeck_CardMask card;
     StdDeck_CardMask_RESET(hole);
     StdDeck_CardMask_RESET(board);
     int i, cardi;
-    if(argc < 5) return (EXIT_FAILURE);
     
     for(i = 1; i < 5; ++i) {
        StdDeck_stringToCard(argv[i], &cardi); 
@@ -67,6 +61,36 @@ int main(int argc, char** argv) {
     
     
     printf("\n");
+}
+
+/*
+ * 
+ */
+int main(int argc, char** argv) {
+    init_preflop_holes();
+    
+    if(argc < 5) {
+        size_t nbytes = 0;
+        char *line = NULL;
+        char* cards[15] = {};
+        int num_cards;
+        int i;
+        size_t len;
+        
+        while(getline(&line, &nbytes, stdin) > 0) {
+            len = strlen(line);
+            num_cards = 1;
+            for (i = 1; i <= len/3; ++i) {
+                cards[i] = line + ((i-1) * 3);
+                ++num_cards;
+            }
+            if (num_cards > 1) {
+                calc(num_cards, cards);
+            }
+        }
+    } else {
+        calc(argc, argv);
+    }
     return (EXIT_SUCCESS);
 }
 
