@@ -19,45 +19,34 @@ static inline void calc(int argc, char** argv) {
     StdDeck_CardMask_RESET(board);
     int i, cardi;
     
+    po_probs probs;
+    
     for(i = 1; i < 5; ++i) {
        StdDeck_stringToCard(argv[i], &cardi); 
        card = StdDeck_MASK(cardi);
        StdDeck_CardMask_OR(hole, hole, card);
     }
-    po_probs probs;
-    probs = get_probs(hole, board);
-    printf("%.4f", probs.win + probs.draw);
+    
             
     if ( argc > 7) {
-    for(i = 5; i < 8; ++i) {
+    for(i = 5; i < argc; ++i) {
        StdDeck_stringToCard(argv[i], &cardi); 
        card = StdDeck_MASK(cardi);
        StdDeck_CardMask_OR(board, board, card);
     }
-    probs = get_probs(hole, board);
-    printf(" %.4f", probs.win + probs.draw);
+
     }
     
-    if ( argc > 8) {
-        i = 8;
-       StdDeck_stringToCard(argv[i], &cardi); 
-       card = StdDeck_MASK(cardi);
-       StdDeck_CardMask_OR(board, board, card);
-    
     probs = get_probs(hole, board);
-    printf(" %.4f", probs.win + probs.draw);
-    }
+    printf("%.4f", probs.win + probs.draw);
     
-    if ( argc > 9) {
-        i = 9;
-       StdDeck_stringToCard(argv[i], &cardi); 
-       card = StdDeck_MASK(cardi);
-       StdDeck_CardMask_OR(board, board, card);
+    for (i = 0; i < HandType_COUNT; ++i) {
+        printf(" %.3f", probs.my_hands[i]);
+    }   
     
-    probs = get_probs(hole, board);
-    printf(" %.4f", probs.win + probs.draw);
-    }
-    
+    for (i = 0; i < HandType_COUNT; ++i) {
+        printf(" %.3f", probs.other_hands[i]);
+    }   
     
     
     

@@ -76,7 +76,16 @@ int get_preflop_index(StdDeck_CardMask hole) {
 po_probs preflop_probs(StdDeck_CardMask hole) {
     int index = get_preflop_index(hole);
     
-    po_probs prob = {win_table[index]/100, draw_table[index]/100, loss_table[index]/100};
+    int i;
+    
+    po_probs prob;
+    prob.win = win_table[index];
+    prob.draw = draw_table[index];
+    prob.loss = 1.0- win_table[index] -draw_table[index];
+    for(i = 0 ; i < HandType_COUNT; ++i) {
+        prob.my_hands[i] = my_hand_probs_table[index][i];
+        prob.other_hands[i] = other_hand_probs_table[index][i];
+    }
     return prob;
 };
 

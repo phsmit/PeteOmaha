@@ -26,6 +26,9 @@ typedef struct po_probs {
     double win;
     double draw;
     double loss;
+    
+    double my_hands[HandType_COUNT];
+    double other_hands[HandType_COUNT];
 } po_probs;
 
 typedef struct po_settings {

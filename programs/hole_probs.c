@@ -18,7 +18,7 @@
 
 static inline void normalize_counts(long  counts[HandType_COUNT], double  probs[HandType_COUNT]) {
     int i;
-    long total;
+    long total = 0;
     for (i = 0; i < HandType_COUNT; ++i) {
         total += counts[i];
     }
