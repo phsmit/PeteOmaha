@@ -59,14 +59,14 @@ static inline void hole_chance(StdDeck_CardMask hole, po_res_counts * counts) {
     
 //    StdDeck_CardMask_OR(used_cards, hole, board);
 
-    DECK_MONTECARLO_N_CARDS_D(StdDeck, board, hole, 5, 10000, {
+    DECK_MONTECARLO_N_CARDS_D(StdDeck, board, hole, 5, 1000, {
         StdDeck_OmahaHi_EVAL(hole, board, &my_score);
         
         ++counts->my_hand[HandVal_HANDTYPE(my_score)];
         
         StdDeck_CardMask_OR(used_cards, hole, board);
         
-        DECK_MONTECARLO_N_CARDS_D(StdDeck, hole2, used_cards, 4, 1000, {
+        DECK_MONTECARLO_N_CARDS_D(StdDeck, hole2, used_cards, 4, 100, {
             StdDeck_OmahaHi_EVAL(hole2, board, &other_score);
             ++counts->other_hand[HandVal_HANDTYPE(other_score)];
             if (my_score > other_score) {

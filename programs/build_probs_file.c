@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
     puts("#include \"probtables.h\"");
     printf("double win_table[%d] = { \n", NUM_UNIQUES);
     for (i = 0; i < NUM_UNIQUES; ++i) {
-        printf("%.2f", wins[i]);
+        printf("%.3f", wins[i]);
         if (i < NUM_UNIQUES -1) {
             printf(",\n");
         }
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
     
     printf("double draw_table[%d] = { \n", NUM_UNIQUES);
     for (i = 0; i < NUM_UNIQUES; ++i) {
-        printf("%.2f", draws[i]);
+        printf("%.3f", draws[i]);
         if (i < NUM_UNIQUES -1) {
             printf(",\n");
         }
@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
     printf("double my_hand_probs_table[%d][%d] = { \n", NUM_UNIQUES, HandType_COUNT);
     for (i = 0; i < NUM_UNIQUES; ++i) {
         for (j = 0; j < HandType_COUNT; ++j) {
-            printf("%.2f", hole_probs_me[i][j]);
+            printf("%.3f", hole_probs_me[i][j]);
             if (j < HandType_COUNT -1) {
                 printf(",");
             }
@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
     printf("double other_hand_probs_table[%d][%d] = { \n", NUM_UNIQUES, HandType_COUNT);
     for (i = 0; i < NUM_UNIQUES; ++i) {
         for (j = 0; j < HandType_COUNT; ++j) {
-            printf("%.2f", hole_probs_other[i][j]);
+            printf("%.3f", hole_probs_other[i][j]);
             if (j < HandType_COUNT -1) {
                 printf(",");
             }
