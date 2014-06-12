@@ -1,7 +1,11 @@
-#!/bin/sh
-# 
-# File:   hole_probs_job.sh
-# Author: psmit
-#
-# Created on Jun 12, 2014, 11:34:30 AM
-#
+#!/bin/bash
+#SBATCH -n 1
+#SBATCH -p short
+#SBATCH -t 04:00:00
+#SBATCH --mem-per-cpu=1000
+
+id=$SLURM_ARRAY_TASK_ID
+
+filename=$(ls -1 job/ | sort | sed "${id}q;d")
+
+../build/hole_probs < job/${filename} > res/${filename}
