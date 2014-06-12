@@ -6,7 +6,7 @@ mkdir -p job
 mkdir -p res
 
 ../build/unique_holes > uniques
-split -l 20 uniques job/job
+split -l 30 uniques job/job
 
 num_jobs=$(ls -1 job | wc -l)
 
