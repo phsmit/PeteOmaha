@@ -38,7 +38,7 @@ static inline void calc(int argc, char** argv) {
     }
     
     probs = get_probs(hole, board);
-    printf("%.4f", probs.win);
+    printf("%.4f ", probs.win);
     printf("%.4f", probs.draw);
     
     for (i = 0; i < HandType_COUNT; ++i) {
